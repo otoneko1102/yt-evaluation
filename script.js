@@ -6,7 +6,10 @@ function check() {
         fetch(`https://returnyoutubedislikeapi.com/votes?videoId=${videoId}`)
             .then(response => response.json())
             .then(data => {
-              const count = `▶ ${data.viewCount} | 👍${data.likes} | 👎${data.dislikes}`;
+              const format = (number) => {
+                  return new Intl.NumberFormat().format(number);
+              };
+              const count = `▶ ${format(data.viewCount)} | 👍 ${format(data.likes)} | 👎 ${format(data.dislikes)}`;
                 document.getElementById("count").textContent = count;
             })
             .catch(error => {
