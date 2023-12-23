@@ -16,11 +16,17 @@ function check() {
                 document.getElementById("count").textContent = "N/A";
             });
     } else {
-        alert("有効なYouTubeの動画のURLを入力してください");
+        alert("This URL is invalid.");
     }
 }
 
 function extractVideoId(url) {
-    const match = url.match(/[?&]v=([a-zA-Z0-9_-]+)/);
-    return match ? match[1] : null;
+    const urlObject = new URL(url);
+
+    if (urlObject.hostname === "www.youtube.com" || urlObject.hostname === "m.youtube.com") {
+        return urlObject.searchParams.get("v");
+    } else if (urlObject.hostname === "youtu.be") {
+        return urlObject.pathname.substr(1);  // Remove leading slash
+    }
+    return null;
 }
