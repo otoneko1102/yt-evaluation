@@ -22,11 +22,18 @@ function check() {
 
 function extractVideoId(url) {
     const urlObject = new URL(url);
+    let videoId = null;
 
     if (urlObject.hostname === "www.youtube.com" || urlObject.hostname === "m.youtube.com") {
-        return urlObject.searchParams.get("v");
+        videoId = urlObject.searchParams.get("v");
     } else if (urlObject.hostname === "youtu.be") {
-        return urlObject.pathname.substr(1);  // Remove leading slash
+        videoId = urlObject.pathname.substr(1);  // Remove leading slash
+    } else if (urlObject.hostname.endsWith(".youtube.com")) {
+        // Handle short URLs like "https://youtu.be/abc123" or "https://youtube.com/shorts/abc123"
+        const pathParts = urlObject.pathname.split("/");
+        if (pathParts.length === 3 && pathParts[1] === "shorts") {
+            videoId = pathParts[2];
+        }
     }
-    return null;
+    return videoId;
 }
